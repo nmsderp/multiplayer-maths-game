@@ -98,3 +98,25 @@ input[type="submit"] {
 .questionArea form input[type="submit"] {
   background-color: #FF2E63;
 }
+
+.leaderboard {
+  display: none;
+  text-align: center;
+}
+
+.leaderboard ul{
+  margin: 0;
+  padding: 0;
+}
+
+.leaderboard ul li{
+  display: inline-block;
+  margin: 5px;
+  width: 60%;
+  height: 90px;
+  font-size: 30px;
+  text-align: center;
+  padding-top:45px;
+  background-color: #fff;
+  border-radius: 10px;
+}

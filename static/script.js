@@ -1,4 +1,4 @@
-var username, a, b, answer, score = 0, time = 0, timer, questionNum=1;
+var username, answer, preScore = 0, time = 0, timer, questionNum=0;
 
 
 $(function(){
@@ -32,41 +32,42 @@ $(function(){
     socket.emit("start game");
   });
 
-  socket.on("game started", function(){
+  socket.on("game started", function(data){
     $playersScreen.hide();
     $('body').css("backgroundColor", "#FFF");
-    generateQuestion();
+
+    questionNum++;
+    answer = data.a + data.b;
+    $("#questionNum").text("Question "+questionNum+"/10:");
+    $("#question").text(data.a+" + "+data.b+" =");
     $questionArea.show();
-    timer = setInterval(function(){
-      time++;
-      console.log(time);
-      if(time>=9){
-        clearInterval(timer);
-      }
-    }, 500);
   })
 
   $questionForm.submit(function(e){
     e.preventDefault();
-    clearInterval(timer);
     if ($answer.val() == answer){
-      score += 10-time;
+      preScore = 1;
+      $question.css("color", "#33ff77");
+      $question.text("Correct!");
+    } else {
+      preScore = 0;
+      $question.css("color", "#FF2E63");
+      $question.text("Incorrect!");
     }
-    socket.on("answered", score);
-    time=0;
+    socket.emit("question answered", preScore);
   });
 
+  socket.on("get leaderboard", function(data){
+    var html = "";
+    for (i=0; i<data.scores.length; i++){
+      html += "<li><strong>"+data.scores[i].username+"</strong>: "+data.scores[i].score+"</li>";
+    }
+    $(".leaderboard ul").html(html);
+
+    $questionArea.hide();
+    $(".leaderboard").show();
+    $('body').css("backgroundColor", "#FF2E63");
+    console.log(data.scores);
+  })
+
 });
-
-function generateQuestion(){
-  questionNum++;
-  a = getRandomNum(1, 10);
-  b = getRandomNum(1, 10);
-  answer = a + b;
-  $("#questionNum").text("Question "+questionNum+"/10:");
-  $("#question").text(a+" + "+b+" =");
-}
-
-function getRandomNum(min, max){
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}

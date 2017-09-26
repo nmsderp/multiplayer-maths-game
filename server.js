@@ -7,6 +7,7 @@ const $ = require('jquery');
 var users = [];
 var connections = [];
 var scores = [];
+var answersReceived = 0;
 
 app.use(express.static(__dirname + "/static/"));
 
@@ -35,13 +36,11 @@ io.sockets.on("connection", (socket) => {
     console.log("Disconnected: %s sockets connected", connections.length);
   })
 
-  //User Joining
+  //User Joining game
   socket.on("new player", (data) => {
     socket.username = data;
     users.push(data);
     updateUsernames();
-    scores.push(data);
-    scores[scores.indexOf(data)] = 0;
   })
 
   //Update Usernames
@@ -51,13 +50,32 @@ io.sockets.on("connection", (socket) => {
 
   //Start Game
   socket.on("start game", () => {
-    io.sockets.emit("game started");
+    var num1 = getRandomNum(1, 10);
+    var num2 = getRandomNum(1, 10);
+    io.sockets.emit("game started", {a: num1, b: num2});
+    answersReceived = 0;
   })
 
-  //Correct answer
-  socket.on("correct answer", (data) => {
-    scores[scores.indexOf(data)] += 1;
-    console.log(scores[scores.indexOf(data)]);
-    io.sockets.emit("get scores", scores);
+  //Answer submitted
+  socket.on("question answered", (data) => {
+    if(data!=0){
+      for (var i=0; i<=Math.ceil(users.length/2); i++) {
+        if(answersReceived == i){
+          data *= (users.length-i);
+          break;
+        }
+      }
+    }
+    scores.push({username: socket.username, score: data});
+    answersReceived++;
+    if(answersReceived==users.length){
+      io.sockets.emit("get leaderboard", {scores: scores});
+      scores.length = 0;
+    }
   })
+
 })
+
+function getRandomNum(min, max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

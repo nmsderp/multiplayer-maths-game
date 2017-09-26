@@ -12,7 +12,7 @@
   </head>
   <body>
 
-    <form id="loginForm">
+    <form id="loginForm" autocomplete="off">
       <input type="text" id="username" placeholder="Username" required />
       <input type="submit" value=">" />
     </form>
@@ -27,14 +27,15 @@
     <div class="questionArea">
       <span id="questionNum"></span>
       <h1 id="question">12 x 5 =</h1>
-      <form id="questionForm">
+      <form id="questionForm" autocomplete="off">
         <input type="text" id="answer" placeholder="Answer" required />
         <input type="submit" value=">" />
       </form>
     </div>
 
     <div class="leaderboard">
-
+      <h1>leaderboard</h1>
+      <ul></ul>
     </div>
   </body>
 </html>
