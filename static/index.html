@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Multiplayer Maths Competition</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="script.js" type="text/javascript"></script>
+  </head>
+  <body>
+
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="submit" value=">" />
+    </form>
+
+    <div class="playersScreen">
+      <h1>Players joined</h1>
+      <ul id="playersInGame">
+      </ul>
+      <a id="startGame">Start Game!</a>
+    </div>
+
+    <div class="questionArea">
+      <span id="questionNum"></span>
+      <h1 id="question">12 x 5 =</h1>
+      <form id="questionForm">
+        <input type="text" id="answer" placeholder="Answer" required />
+        <input type="submit" value=">" />
+      </form>
+    </div>
+
+    <div class="leaderboard">
+
+    </div>
+  </body>
+</html>
