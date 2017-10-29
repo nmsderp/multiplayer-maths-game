@@ -49,17 +49,16 @@ $(function(){
   //////RETHINK THE SCORING SYSTEM BECAUSE IM PRETTY SURE YOU CAN DO IT ALL SERVER SIDE.
   /////THAT WILL MEAN THAT ITS A LOT EASIER AND MORE EFFICIENT
 //
-//   $questionForm.submit(function(e){
-//     e.preventDefault();
-//     if ($answer.val() == answer){
-//       score += 1;
-//       $question.css("color", "#33ff77");
-//       $question.text("Correct!");
-//     } else {
-//       $question.text("Incorrect!");
-//     }
-//     socket.emit("question answered", score);
-//   });
+  $questionForm.submit(function(e){
+    e.preventDefault();
+    if ($answer.val() == answer){
+      score = 1;
+    } else {
+      score = 0;
+    }
+    socket.emit("question answered", score);
+    //SHOW WAITING SCREEN
+  });
 //
 //   socket.on("get leaderboard", function(data){
 //     var html = "";

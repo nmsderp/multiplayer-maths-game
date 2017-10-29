@@ -17,10 +17,6 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 })
 
-app.post("/login", (req, res) => {
-
-})
-
 
 io.sockets.on("connection", (socket) => {
   connections.push(socket);
@@ -59,33 +55,33 @@ io.sockets.on("connection", (socket) => {
     io.sockets.emit("question generated", {a: num1, b: num2});
     answersReceived = 0;
   })
-  //
-  // //Answer submitted
-  // socket.on("question answered", (data) => {
-  //   if(data!=0){
-  //     for (var i=0; i<=Math.ceil(users.length/2); i++) {
-  //       if(answersReceived == i){
-  //         data += (users.length-i);
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   scores.push({username: socket.username, score: data});
-  //   answersReceived++;
-  //   if(answersReceived==users.length){
-  //     io.sockets.emit("get leaderboard", {scores: scores});
-  //     scores.length = 0;
-  //   }
-  // // })
-  //
-  // socket.on("get question", () => {
-  //   var num1 = getRandomNum(1, 10);
-  //   var num2 = getRandomNum(1, 10);
-  //   io.sockets.emit("next question", {a: num1, b: num2});
-  //   answersReceived = 0;
-  // })
+
+  //Answer submitted
+  socket.on("question answered", (score) => {
+    answersReceived++;
+    if(score!=0){
+      for (var i=0; i<2; i++) { //gives first 2 players to answer extra points (1st: 3 pts, 2nd: 2pts, others: 1pt)
+        if(answersReceived == i+1){
+          score += 2-i;
+          break;
+        }
+      }
+    }
+    var indexOfUser = scores.findIndex(i => i.name == socket.username);
+    scores[indexOfUser].score += score;
+
+    if(answersReceived==users.length){
+      console.log(scores);
+      io.sockets.emit("get leaderboard", {scores: scores});
+    }
+
+  })
 
 })
+
+function getUsername(){
+
+}
 
 function getRandomNum(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
