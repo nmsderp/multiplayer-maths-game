@@ -1,4 +1,4 @@
-var username, answer, preScore = 0, time = 0, timer, questionNum=0;
+var username, answer, score=0, questionNum=0;
 
 
 $(function(){
@@ -29,45 +29,69 @@ $(function(){
   })
 
   $('#startGame').click(function(){
-    socket.emit("start game");
+    socket.emit("get question");
   });
 
-  socket.on("game started", function(data){
-    $playersScreen.hide();
+  socket.on("question generated", function(data){
+    if (questionNum==0){
+      $playersScreen.hide();
+    }
+
     $('body').css("backgroundColor", "#FFF");
 
     questionNum++;
     answer = data.a + data.b;
-    $("#questionNum").text("Question "+questionNum+"/10:");
+    $("#questionNum").text("Question "+questionNum+"/5:");
     $("#question").text(data.a+" + "+data.b+" =");
     $questionArea.show();
-  })
-
-  $questionForm.submit(function(e){
-    e.preventDefault();
-    if ($answer.val() == answer){
-      preScore = 1;
-      $question.css("color", "#33ff77");
-      $question.text("Correct!");
-    } else {
-      preScore = 0;
-      $question.css("color", "#FF2E63");
-      $question.text("Incorrect!");
-    }
-    socket.emit("question answered", preScore);
   });
 
-  socket.on("get leaderboard", function(data){
-    var html = "";
-    for (i=0; i<data.scores.length; i++){
-      html += "<li><strong>"+data.scores[i].username+"</strong>: "+data.scores[i].score+"</li>";
-    }
-    $(".leaderboard ul").html(html);
-
-    $questionArea.hide();
-    $(".leaderboard").show();
-    $('body').css("backgroundColor", "#FF2E63");
-    console.log(data.scores);
-  })
-
+  //////RETHINK THE SCORING SYSTEM BECAUSE IM PRETTY SURE YOU CAN DO IT ALL SERVER SIDE.
+  /////THAT WILL MEAN THAT ITS A LOT EASIER AND MORE EFFICIENT
+//
+//   $questionForm.submit(function(e){
+//     e.preventDefault();
+//     if ($answer.val() == answer){
+//       score += 1;
+//       $question.css("color", "#33ff77");
+//       $question.text("Correct!");
+//     } else {
+//       $question.text("Incorrect!");
+//     }
+//     socket.emit("question answered", score);
+//   });
+//
+//   socket.on("get leaderboard", function(data){
+//     var html = "";
+//     for (i=0; i<data.scores.length; i++){
+//       if (data.scores[i].username == username){ score=data.scores[i].score; }
+//       html += "<li><strong>"+data.scores[i].username+"</strong>: "+data.scores[i].score+"</li>";
+//     }
+//     $(".leaderboard ul").html(html);
+//
+//     $questionArea.hide();
+//     $(".leaderboard").show();
+//     $('body').css("backgroundColor", "#eee");
+//
+//     // setTimeout(function(){
+//     //   console.log("hi");
+//       // socket.emit("get question");
+//     // },5000);
+//   })
+//
+//   socket.on("next question", function(data){
+//     $(".leaderboard").hide();
+//
+//     //resetting colours and fields
+//     $question.css("color", "#FF2E63");
+//     $answer.val("");
+//     $('body').css("backgroundColor", "#fff");
+//
+//     questionNum++;
+//     answer = data.a + data.b;
+//     $("#questionNum").text("Question "+questionNum+"/5:");
+//     $("#question").text(data.a+" + "+data.b+" =");
+//     $questionArea.show();
+//   });
+//
 });

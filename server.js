@@ -5,8 +5,8 @@ const io = require('socket.io')(server);
 const $ = require('jquery');
 
 var users = [];
-var connections = [];
 var scores = [];
+var connections = [];
 var answersReceived = 0;
 
 app.use(express.static(__dirname + "/static/"));
@@ -40,6 +40,10 @@ io.sockets.on("connection", (socket) => {
   socket.on("new player", (data) => {
     socket.username = data;
     users.push(data);
+    scores.push({
+      name: data,
+      score: 0
+    });
     updateUsernames();
   })
 
@@ -48,31 +52,38 @@ io.sockets.on("connection", (socket) => {
     io.sockets.emit("get players", {players: users});
   }
 
-  //Start Game
-  socket.on("start game", () => {
+  //Get question
+  socket.on("get question", () => {
     var num1 = getRandomNum(1, 10);
     var num2 = getRandomNum(1, 10);
-    io.sockets.emit("game started", {a: num1, b: num2});
+    io.sockets.emit("question generated", {a: num1, b: num2});
     answersReceived = 0;
   })
-
-  //Answer submitted
-  socket.on("question answered", (data) => {
-    if(data!=0){
-      for (var i=0; i<=Math.ceil(users.length/2); i++) {
-        if(answersReceived == i){
-          data *= (users.length-i);
-          break;
-        }
-      }
-    }
-    scores.push({username: socket.username, score: data});
-    answersReceived++;
-    if(answersReceived==users.length){
-      io.sockets.emit("get leaderboard", {scores: scores});
-      scores.length = 0;
-    }
-  })
+  //
+  // //Answer submitted
+  // socket.on("question answered", (data) => {
+  //   if(data!=0){
+  //     for (var i=0; i<=Math.ceil(users.length/2); i++) {
+  //       if(answersReceived == i){
+  //         data += (users.length-i);
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   scores.push({username: socket.username, score: data});
+  //   answersReceived++;
+  //   if(answersReceived==users.length){
+  //     io.sockets.emit("get leaderboard", {scores: scores});
+  //     scores.length = 0;
+  //   }
+  // // })
+  //
+  // socket.on("get question", () => {
+  //   var num1 = getRandomNum(1, 10);
+  //   var num2 = getRandomNum(1, 10);
+  //   io.sockets.emit("next question", {a: num1, b: num2});
+  //   answersReceived = 0;
+  // })
 
 })
 
