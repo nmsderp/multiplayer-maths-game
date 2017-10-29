@@ -11,6 +11,7 @@ $(function(){
   var $questionForm = $('#questionForm');
   var $question = $("#question");
   var $answer = $('#answer');
+  var $waiting = $('.waiting');
 
   $loginForm.submit(function(e){
     e.preventDefault();
@@ -37,7 +38,9 @@ $(function(){
       $playersScreen.hide();
     }
 
+    $answer.val("");
     $('body').css("backgroundColor", "#FFF");
+    $waiting.hide();
 
     questionNum++;
     answer = data.a + data.b;
@@ -57,27 +60,25 @@ $(function(){
       score = 0;
     }
     socket.emit("question answered", score);
-    //SHOW WAITING SCREEN
+    $questionArea.hide();
+    $waiting.show(); //Show waiting screen until all players submit an answer
   });
-//
-//   socket.on("get leaderboard", function(data){
-//     var html = "";
-//     for (i=0; i<data.scores.length; i++){
-//       if (data.scores[i].username == username){ score=data.scores[i].score; }
-//       html += "<li><strong>"+data.scores[i].username+"</strong>: "+data.scores[i].score+"</li>";
-//     }
-//     $(".leaderboard ul").html(html);
-//
-//     $questionArea.hide();
-//     $(".leaderboard").show();
-//     $('body').css("backgroundColor", "#eee");
-//
-//     // setTimeout(function(){
-//     //   console.log("hi");
-//       // socket.emit("get question");
-//     // },5000);
-//   })
-//
+
+  socket.on("get leaderboard", function(scores){
+    console.log(scores);
+  //   var html = "";
+  //   for (i=0; i<data.scores.length; i++){
+  //     if (data.scores[i].username == username){ score=data.scores[i].score; }
+  //     html += "<li><strong>"+data.scores[i].username+"</strong>: "+data.scores[i].score+"</li>";
+  //   }
+  //   $(".leaderboard ul").html(html);
+  //
+  //   $questionArea.hide();
+  //   $(".leaderboard").show();
+  //   $('body').css("backgroundColor", "#eee");
+
+  })
+
 //   socket.on("next question", function(data){
 //     $(".leaderboard").hide();
 //

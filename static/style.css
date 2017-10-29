@@ -99,6 +99,10 @@ input[type="submit"] {
   background-color: #f2f2f2;
 }
 
+.waiting {
+  display: none;
+}
+
 .leaderboard {
   display: none;
   text-align: center;

@@ -50,37 +50,40 @@ io.sockets.on("connection", (socket) => {
 
   //Get question
   socket.on("get question", () => {
-    var num1 = getRandomNum(1, 10);
-    var num2 = getRandomNum(1, 10);
-    io.sockets.emit("question generated", {a: num1, b: num2});
-    answersReceived = 0;
+    generateQuestion();
   })
 
   //Answer submitted
   socket.on("question answered", (score) => {
     answersReceived++;
-    if(score!=0){
-      for (var i=0; i<2; i++) { //gives first 2 players to answer extra points (1st: 3 pts, 2nd: 2pts, others: 1pt)
-        if(answersReceived == i+1){
-          score += 2-i;
-          break;
-        }
-      }
-    }
+    // if(score!=0){
+    //   for (var i=0; i<2; i++) { //gives first 2 players to answer extra points (1st: 3 pts, 2nd: 2pts, others: 1pt)
+    //     if(answersReceived == i+1){
+    //       score += 2-i;
+    //       break;
+    //     }
+    //   }
+    // }
     var indexOfUser = scores.findIndex(i => i.name == socket.username);
     scores[indexOfUser].score += score;
 
     if(answersReceived==users.length){
       console.log(scores);
       io.sockets.emit("get leaderboard", {scores: scores});
+      setTimeout(function(){
+        generateQuestion();
+      }, 5000);
     }
 
   })
 
 })
 
-function getUsername(){
-
+function generateQuestion(){
+  var num1 = getRandomNum(1, 10);
+  var num2 = getRandomNum(1, 10);
+  io.sockets.emit("question generated", {a: num1, b: num2});
+  answersReceived = 0;
 }
 
 function getRandomNum(min, max){
