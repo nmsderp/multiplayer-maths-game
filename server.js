@@ -26,6 +26,7 @@ io.sockets.on("connection", (socket) => {
   socket.on("disconnect", (data) => {
     if (socket.username){
       users.splice(users.indexOf(socket.username),1);
+      scores.splice(scores.findIndex(i => i.name == socket.username),1);
       updateUsernames();
     }
     connections.splice(connections.indexOf(socket),1);
@@ -56,7 +57,7 @@ io.sockets.on("connection", (socket) => {
   //Answer submitted
   socket.on("question answered", (score) => {
     answersReceived++;
-    // if(score!=0){
+    // if(score!=0){ //The score algorithm
     //   for (var i=0; i<2; i++) { //gives first 2 players to answer extra points (1st: 3 pts, 2nd: 2pts, others: 1pt)
     //     if(answersReceived == i+1){
     //       score += 2-i;

@@ -40,7 +40,7 @@ $(function(){
 
     $answer.val("");
     $('body').css("backgroundColor", "#FFF");
-    $waiting.hide();
+    $(".leaderboard").hide();
 
     questionNum++;
     answer = data.a + data.b;
@@ -65,6 +65,8 @@ $(function(){
   });
 
   socket.on("get leaderboard", function(scores){
+    $waiting.hide();
+    $(".leaderboard").show();
     console.log(scores);
   //   var html = "";
   //   for (i=0; i<data.scores.length; i++){
