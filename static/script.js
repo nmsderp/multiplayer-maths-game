@@ -1,4 +1,5 @@
-var username, answer, score=0, questionNum=0;
+var username, answer, score=0, questionNum=0, i=0, state=1;
+var colors = ["#80ffdf", "#66ffd9", "#4dffd2", "#33ffcc", "#1affc6", "#00ffbf", "#00e6ac", "#00cc99", "#00b386"];
 
 
 $(function(){
@@ -12,6 +13,7 @@ $(function(){
   var $question = $("#question");
   var $answer = $('#answer');
   var $waiting = $('.waiting');
+
 
   $loginForm.submit(function(e){
     e.preventDefault();
@@ -51,7 +53,7 @@ $(function(){
 
   //////RETHINK THE SCORING SYSTEM BECAUSE IM PRETTY SURE YOU CAN DO IT ALL SERVER SIDE.
   /////THAT WILL MEAN THAT ITS A LOT EASIER AND MORE EFFICIENT
-//
+
   $questionForm.submit(function(e){
     e.preventDefault();
     if ($answer.val() == answer){
@@ -61,19 +63,31 @@ $(function(){
     }
     socket.emit("question answered", score);
     $questionArea.hide();
-    $waiting.show(); //Show waiting screen until all players submit an answer
+    $waiting.show(); //Show waiting screen until all players submit an answerocean theme
+    var rainbowAnimation = setInterval(function(){
+      $waiting.css("backgroundColor", colors[i]);
+      if(state==1){i++} else {i--};
+      if (i === colors.length-1){
+  				state=2;
+  		} else if (i==0) {
+        state=1;
+      }
+    }, 100);
   });
 
   socket.on("get leaderboard", function(scores){
     $waiting.hide();
     $(".leaderboard").show();
-    console.log(scores);
-  //   var html = "";
-  //   for (i=0; i<data.scores.length; i++){
-  //     if (data.scores[i].username == username){ score=data.scores[i].score; }
-  //     html += "<li><strong>"+data.scores[i].username+"</strong>: "+data.scores[i].score+"</li>";
-  //   }
-  //   $(".leaderboard ul").html(html);
+    var scores = scores.scores
+    for(x=0; x<scores.length; x++){
+      console.log(scores[x].name);
+    }
+    var html = "";
+    for (x=0; x<scores.length; x++){
+      if (scores[x].name == username){ score= scores[x].score; }
+      html += "<li><strong>"+scores[x].name+"</strong>: "+scores[x].score+"</li>";
+    }
+    $(".leaderboard ul").html(html);
   //
   //   $questionArea.hide();
   //   $(".leaderboard").show();

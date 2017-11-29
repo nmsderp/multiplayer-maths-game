@@ -101,6 +101,10 @@ input[type="submit"] {
 
 .waiting {
   display: none;
+  text-align: center;
+  padding: 40vh 0;
+  font-size: 22px;
+  color: #fff;
 }
 
 .leaderboard {
