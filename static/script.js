@@ -36,19 +36,24 @@ $(function(){
   });
 
   socket.on("question generated", function(data){
-    if (questionNum==0){
+    questionNum++;
+    if (questionNum==1){
       $playersScreen.hide();
+
     }
 
-    $answer.val("");
-    $('body').css("backgroundColor", "#FFF");
-    $(".leaderboard").hide();
+    if (questionNum>2){
+      socket.emit("end of game");
+    } else {
+      $answer.val("");
+      $('body').css("backgroundColor", "#FFF");
+      $(".leaderboard").hide();
 
-    questionNum++;
-    answer = data.a + data.b;
-    $("#questionNum").text("Question "+questionNum+"/5:");
-    $("#question").text(data.a+" + "+data.b+" =");
-    $questionArea.show();
+      answer = data.a + data.b;
+      $("#questionNum").text("Question "+questionNum+"/5:");
+      $("#question").text(data.a+" + "+data.b+" =");
+      $questionArea.show();
+    }
   });
 
   //////RETHINK THE SCORING SYSTEM BECAUSE IM PRETTY SURE YOU CAN DO IT ALL SERVER SIDE.
@@ -75,8 +80,11 @@ $(function(){
     }, 100);
   });
 
-  socket.on("get leaderboard", function(scores){
-    var scores = scores.scores;
+  socket.on("get leaderboard", function(data){
+    var scores = data.scores;
+    // var isEnd = data.end;
+    //
+    // console.log(isEnd);
 
     scores.sort(function(a,b) { //sort by higher score
       return a.score < b.score;
@@ -95,6 +103,9 @@ $(function(){
     $(".leaderboard ul").html(html);
   })
 
-
+  socket.on("reset game", function(){
+    $(".leaderboard").hide();
+    $loginForm.show();
+  });
 
 });

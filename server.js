@@ -1,8 +1,7 @@
-const express = require('express')
+const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const $ = require('jquery');
 
 var users = [];
 var scores = [];
@@ -71,12 +70,17 @@ io.sockets.on("connection", (socket) => {
     if(answersReceived==users.length){
       console.log(scores);
       io.sockets.emit("get leaderboard", {scores: scores});
-      
+
       setTimeout(function(){
         generateQuestion();
       }, 5000);
     }
+  })
 
+  socket.on("end of game", function(){
+    setTimeout(function(){
+      resetGame();
+    },2000);
   })
 
 })
@@ -90,4 +94,11 @@ function generateQuestion(){
 
 function getRandomNum(min, max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function resetGame(){
+  users.length = 0;
+  connections.length = 0;
+  scores.length = 0;
+  io.sockets.emit("reset game");
 }
