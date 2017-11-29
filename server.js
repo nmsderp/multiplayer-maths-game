@@ -71,6 +71,7 @@ io.sockets.on("connection", (socket) => {
     if(answersReceived==users.length){
       console.log(scores);
       io.sockets.emit("get leaderboard", {scores: scores});
+      
       setTimeout(function(){
         generateQuestion();
       }, 5000);

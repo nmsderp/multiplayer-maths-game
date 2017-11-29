@@ -76,38 +76,25 @@ $(function(){
   });
 
   socket.on("get leaderboard", function(scores){
+    var scores = scores.scores;
+
+    scores.sort(function(a,b) { //sort by higher score
+      return a.score < b.score;
+    });
+
     $waiting.hide();
+    $('body').css("backgroundColor", "#eee");
     $(".leaderboard").show();
-    var scores = scores.scores
-    for(x=0; x<scores.length; x++){
-      console.log(scores[x].name);
-    }
+
+    //output scores to the leaderboard
     var html = "";
     for (x=0; x<scores.length; x++){
       if (scores[x].name == username){ score= scores[x].score; }
       html += "<li><strong>"+scores[x].name+"</strong>: "+scores[x].score+"</li>";
     }
     $(".leaderboard ul").html(html);
-  //
-  //   $questionArea.hide();
-  //   $(".leaderboard").show();
-  //   $('body').css("backgroundColor", "#eee");
-
   })
 
-//   socket.on("next question", function(data){
-//     $(".leaderboard").hide();
-//
-//     //resetting colours and fields
-//     $question.css("color", "#FF2E63");
-//     $answer.val("");
-//     $('body').css("backgroundColor", "#fff");
-//
-//     questionNum++;
-//     answer = data.a + data.b;
-//     $("#questionNum").text("Question "+questionNum+"/5:");
-//     $("#question").text(data.a+" + "+data.b+" =");
-//     $questionArea.show();
-//   });
-//
+
+
 });

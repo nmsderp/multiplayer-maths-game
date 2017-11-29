@@ -12,7 +12,7 @@ form#loginForm {
   height: 100%;
 }
 
-input[type="text"] {
+input[type="text"], input[type="tel"] {
   text-align: center;
   font-family: 'rubik', monospace;
   margin: 10px 0;
@@ -92,7 +92,7 @@ input[type="submit"] {
   height: 100%;
 }
 
-.questionArea form input[type="text"] {
+.questionArea form input[type="tel"] {
   background-color: #f2f2f2;
 }
 .questionArea form input[type="submit"] {
@@ -121,10 +121,10 @@ input[type="submit"] {
   display: inline-block;
   margin: 5px;
   width: 60%;
-  height: 90px;
+  height: 70px;
   font-size: 30px;
   text-align: center;
-  padding-top:45px;
+  padding-top:25px;
   background-color: #fff;
   color: #FF2E63;
   border-radius: 10px;
