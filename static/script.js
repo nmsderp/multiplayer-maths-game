@@ -1,4 +1,5 @@
-var username, answer, score=0, questionNum=0, i=0, state=1;
+var username, answer, score=0, questionNum=0, i=0, state=1, winner;
+var numOfQuestions = 1; //Set to number of question you want
 var colors = ["#80ffdf", "#66ffd9", "#4dffd2", "#33ffcc", "#1affc6", "#00ffbf", "#00e6ac", "#00cc99", "#00b386"];
 
 
@@ -41,8 +42,8 @@ $(function(){
       $playersScreen.hide();
 
     }
-
-    if (questionNum>2){
+    //if its the end of the game then emit "end of game" otherwise show question
+    if (questionNum>numOfQuestions){
       socket.emit("end of game");
     } else {
       $answer.val("");
@@ -50,8 +51,8 @@ $(function(){
       $(".leaderboard").hide();
 
       answer = data.a + data.b;
-      $("#questionNum").text("Question "+questionNum+"/5:");
-      $("#question").text(data.a+" + "+data.b+" =");
+      $("#questionNum").text("Question "+questionNum+"/"+numOfQuestions+":"); //e.g. "Question 3/5:"
+      $("#question").text(data.a+" + "+data.b+" ="); //e.g. "5 + 2 ="
       $questionArea.show();
     }
   });
@@ -68,7 +69,7 @@ $(function(){
     }
     socket.emit("question answered", score);
     $questionArea.hide();
-    $waiting.show(); //Show waiting screen until all players submit an answerocean theme
+    $waiting.show(); //Show waiting screen until all players submit an answer ocean theme
     var rainbowAnimation = setInterval(function(){
       $waiting.css("backgroundColor", colors[i]);
       if(state==1){i++} else {i--};
@@ -103,9 +104,12 @@ $(function(){
     $(".leaderboard ul").html(html);
   })
 
-  socket.on("reset game", function(){
+  socket.on("reset game", function(data){
     $(".leaderboard").hide();
-    $loginForm.show();
+    // console.log(data.winner);
+    let msg = "Congratulations to " + data.winner;
+    $(".winner h1").text(msg);
+    $(".winner").show();
   });
 
 });

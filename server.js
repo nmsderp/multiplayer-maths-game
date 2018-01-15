@@ -97,8 +97,8 @@ function getRandomNum(min, max){
 }
 
 function resetGame(){
+  io.sockets.emit("reset game", {winner: scores[0].name});
   users.length = 0;
   connections.length = 0;
   scores.length = 0;
-  io.sockets.emit("reset game");
 }
